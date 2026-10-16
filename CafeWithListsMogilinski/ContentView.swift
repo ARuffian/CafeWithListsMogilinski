@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 
 
@@ -13,25 +14,27 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @Environment(\.modelContext) private var context
+    
     @State var itemArray: [Item] = []
     
-    var item1 = Item(name: "Potato", price: 12.99, calories: 10000, image: "potato")
+    var item1 = Item(name: "Potato", price: 12.99, calories: 10000, image: "potato", count: 0)
     
-    var item2 = Item(name: "Pineapple", price: 2.99, calories: 10, image: "pineapple")
+    var item2 = Item(name: "Pineapple", price: 2.99, calories: 10, image: "pineapple", count: 0)
     
-    var item3 = Item(name: "Pina Colada", price: 5.99, calories: 500, image: "pina_colada")
+    var item3 = Item(name: "Pina Colada", price: 5.99, calories: 500, image: "pina_colada", count: 0)
     
-    var item4 = Item(name: "Primrose", price: 0.99, calories: 0, image: "primrose")
+    var item4 = Item(name: "Primrose", price: 0.99, calories: 0, image: "primrose", count: 0)
     
-    var item5 = Item(name: "Brennan", price: 0.0, calories: 100000000, image: "stupidmcstupidface")
+    var item5 = Item(name: "Brennan", price: 0.0, calories: 100000000, image: "stupidmcstupidface", count: 0)
     
     @State var tf = true
     
-    @State var cart: [Item: Int] = [:]
+    @State var cart: [Item] = []
     
     @State var county = 0
     
-    
+    @Query var carts: [Item]
     
     
     var body: some View {
@@ -54,6 +57,11 @@ struct ContentView: View {
                         .font(.largeTitle.bold())
                         .onAppear(){
                             if tf == true{
+                                context.insert(item1)
+                                context.insert(item2)
+                                context.insert(item3)
+                                context.insert(item4)
+                                context.insert(item5)
                                 itemArray.append(item1)
                                 itemArray.append(item2)
                                 itemArray.append(item3)
@@ -61,6 +69,7 @@ struct ContentView: View {
                                 itemArray.append(item5)
                                 tf = false
                             }
+                            try? context.save()
                         }
                     
                     

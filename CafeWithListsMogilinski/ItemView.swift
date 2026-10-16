@@ -17,7 +17,7 @@ struct ItemView: View {
     
     @State var steppie: Int = 0
     
-     @Binding var cart: [Item: Int]
+     @Binding var cart: [Item]
     
     @Binding var county: Int
     
@@ -55,7 +55,14 @@ struct ItemView: View {
                 
                 Button("Add To Cart"){
                     county += steppie
-                    cart[item, default: 0] += steppie
+                    if let index = cart.firstIndex(where: { $0.name == item.name }) {
+                            cart[index].count += steppie
+                        } else {
+                            // If not in cart, set its count and append it
+                            var newItem = item
+                            newItem.count = steppie
+                            cart.append(newItem)
+                        }
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)
@@ -75,8 +82,8 @@ struct ItemView: View {
 
 #Preview {
     ItemView(
-        item: Item(name: "Sample", price: 2.99, calories: 100, image: "potato"),
-        cart: .constant([:]),
+        item: Item(name: "Sample", price: 2.99, calories: 100, image: "potato", count: 0),
+        cart: .constant([]),
         county: .constant(0)
     )
 }

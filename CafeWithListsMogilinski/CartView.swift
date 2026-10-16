@@ -10,9 +10,11 @@ import SwiftUI
 struct CartView: View {
     
     
-    @Binding var cart: [Item: Int]
+    @Binding var cart: [Item]
     
-    @State var total: Double = 0.0
+    var total: Double {
+            cart.reduce(0.0) { $0 + ($1.price * Double($1.count)) }
+        }
     
     var body: some View {
         
@@ -28,20 +30,24 @@ struct CartView: View {
                     .font(.largeTitle.bold())
                 
             List{
-                ForEach(Array(cart.keys), id: \.self) { item in
-                    if let quantity = cart[item], quantity > 0 {
+                
+                ForEach(cart, id: \.self) { car in
+                     let quantity = car.count
                         
                         //                    total += (item.price * Double(quantity))
                         
-                        Text("\(item.name), Quantity: \(quantity), Total Price: \((item.price * Double(quantity)).formatted(.currency(code: "USD")))")
+                        Text("\(car.name), Quantity: \(quantity), Total Price: \((car.price * Double(quantity)).formatted(.currency(code: "USD")))")
                             .listRowBackground(Color.brown)
-                            .onAppear(){
-                                total += (item.price * Double(quantity))
-                            }
+                            
                         
-                    }
+                    
                     
                 }
+                
+//                ForEach(Array(cart.keys), id: \.self) { item in
+//
+//                    
+//                }
                 
                 
             }
@@ -62,5 +68,5 @@ struct CartView: View {
 }
 
 #Preview {
-    CartView(cart: .constant([:]))
+    CartView(cart: .constant([]))
 }
